@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Payroll – Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="main-header">Employee Payroll</header>
+
+<div class="main-content">
+    <div class="header-row">
+        <h2>Employee Details <span id="emp-count">(0)</span></h2>
+        <a href="./payroll_form.html"><button class="btn add-btn">+ Add Employee</button></a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Profile</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Department</th>
+                <th>Salary</th>
+                <th>Start Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody id="table-display"></tbody>
+    </table>
+</div>
+
+<script src="home.js"></script>
+
+</body>
+</html>
