@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Payroll Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="main-header">Employee Payroll</header>
+
+    <div class="home-container">
+
+    <!-- HEADER SECTION -->
+    <div class="home-header">
+        <h2>Employee Details <span id="emp-count">(0)</span></h2>
+
+        <button class="add-btn" onclick="location.href='add_employee.html'">
+            + Add Employee
+        </button>
+    </div>
+    <table class="emp-table">
+    <thead>
+        <tr>
+            <th>Profile</th>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Department</th>
+            <th>Salary</th>
+            <th>Start Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody id="table-display">
+        <tr>
+            <td><img src="./assets/pic1.jpg" class="table-profile"></td>
+            <td>John Doe</td>
+            <td>Male</td>
+            <td><div class="dept-chip">HR</div></td>
+            <td>40000</td>
+            <td>12 Jan 2025</td>
+            <td>
+                <button class="btn-small">Edit</button>
+                <button class="btn-small delete">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+</div>
+
+<script src="home.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>REST Test</title>
+</head>
+<body>
+
+<h2>Test Employee REST API</h2>
+<button onclick="fetchEmployees()">Fetch Employees</button>
+
+<div id="output"
+     style="margin-top:20px; padding:10px; border:1px solid gray"></div>
+
+<script src="http_services.js"></script>
+<script>
+    const URL = "http://localhost:3000/employees";
+
+    function fetchEmployees() {
+        makePromiseCall("GET", URL)
+            .then(data => {
+                document.getElementById("output").innerHTML =
+                    "<pre>" + data + "</pre>";
+            })
+            .catch(err => {
+                document.getElementById("output").innerHTML =
+                    "<b style='color:red'>" + err + "</b>";
+            });
+    }
+</script>
+
+</body>
+</html>
