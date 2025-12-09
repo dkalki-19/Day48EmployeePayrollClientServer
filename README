@@ -1,5 +1,0 @@
-Use case 2:
-
-localStorage is scoped to a browser + origin + user: data stored in one browser profile cannot be seen by other browsers or users (it's client-side).
-
-JSON Server acts as a central server: any client (browser, mobile, script) making HTTP requests to the server can read/write the same data (global/shared). So switching to a server makes the data accessible to other clients.
