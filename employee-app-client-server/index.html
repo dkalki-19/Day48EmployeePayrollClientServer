@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Employee Payroll REST Services</title>
+</head>
+<body>
+    <h2>REST API Test Page (Using Promise)</h2>
+
+    <button onclick="getEmployees()">GET Employees</button>
+    <button onclick="addEmployee()">POST Employee</button>
+    <button onclick="deleteEmployee()">DELETE Employee (ID = 1)</button>
+
+    <pre id="output" style="background:#eee; padding:20px; margin-top:20px;"></pre>
+
+    <script src="js/http_services.js"></script>
+    <script>
+        const BASE_URL = "http://localhost:3000/employees";
+
+        function print(msg) {
+            document.getElementById("output").innerText = msg;
+        }
+
+        function getEmployees() {
+            makePromiseCall("GET", BASE_URL)
+                .then(response => print(response))
+                .catch(error => print(error));
+        }
+
+        function addEmployee() {
+            const emp = { name: "Test User", salary: "50000" };
+
+            makePromiseCall("POST", BASE_URL, emp)
+                .then(resp => print(resp))
+                .catch(err => print(err));
+        }
+
+        function deleteEmployee() {
+            makePromiseCall("DELETE", BASE_URL + "/1")
+                .then(resp => print("Deleted ID 1 → " + resp))
+                .catch(err => print(err));
+        }
+    </script>
+</body>
+</html>
