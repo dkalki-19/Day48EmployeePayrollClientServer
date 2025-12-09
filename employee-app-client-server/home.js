@@ -1,43 +1,63 @@
-let employeeList = [];
+const useServer = true;   // true = JSON Server, false = Local Storage
+const SERVER_URL = "http://localhost:3000/employees";
+
+let employeePayrollList = [];
 
 window.addEventListener("DOMContentLoaded", () => {
-    // Clear old local list
-    localStorage.removeItem("EmployeePayrollList");
-
-    // load initial (empty for now)
-    employeeList = [];
-
-    document.getElementById("emp-count").textContent = "(" + employeeList.length + ")";
-
-    createInnerHTML();
-
-    checkForNewOrUpdatedData();
+    if (useServer) {
+        getEmployeeFromServer();
+    } else {
+        loadFromLocalStorage();
+    }
 });
 
-function checkForNewOrUpdatedData() {
-    let newEmp = JSON.parse(localStorage.getItem("newEmployee"));
-    let updatedEmp = JSON.parse(localStorage.getItem("updateEmployee"));
-
-    if (newEmp) {
-        employeeList.push(newEmp);
-        localStorage.removeItem("newEmployee");
-    }
-
-    if (updatedEmp) {
-        let index = employeeList.map(e => e.id).indexOf(updatedEmp.id);
-        employeeList.splice(index, 1, updatedEmp);
-        localStorage.removeItem("updateEmployee");
-    }
-
+/* ------------------------------------
+   LOAD FROM LOCAL STORAGE
+-------------------------------------*/
+function loadFromLocalStorage() {
+    employeePayrollList = JSON.parse(localStorage.getItem("EmployeePayrollList")) || [];
+    document.getElementById("emp-count").textContent = "(" + employeePayrollList.length + ")";
     createInnerHTML();
 }
 
+/* ------------------------------------
+   GET FROM JSON SERVER
+-------------------------------------*/
+function getEmployeeFromServer() {
+    fetch(SERVER_URL)
+        .then(response => response.json())
+        .then(data => {
+            employeePayrollList = data;
+            document.getElementById("emp-count").textContent = "(" + data.length + ")";
+            createInnerHTML();
+        })
+        .catch(error => {
+            console.error("Server Error:", error);
+            alert("Unable to connect to server. Showing local storage data.");
+
+            // Fallback
+            loadFromLocalStorage();
+        });
+}
+
+/* ------------------------------------
+   DISPLAY TABLE
+-------------------------------------*/
 function createInnerHTML() {
     let innerHTML = "";
-    for (let emp of employeeList) {
 
-        let formattedDate = new Date(emp.startDate).toDateString();
-        let deptHTML = emp.department.map(d => `<div class='dept-chip'>${d}</div>`).join("");
+    employeePayrollList.forEach(emp => {
+        let date = new Date(emp.startDate);
+        let formattedDate = date.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+
+        let deptHTML = "";
+        emp.department.forEach(dept => {
+            deptHTML += `<div class='dept-chip'>${dept}</div>`;
+        });
 
         innerHTML += `
             <tr>
@@ -48,22 +68,45 @@ function createInnerHTML() {
                 <td>${emp.salary}</td>
                 <td>${formattedDate}</td>
                 <td>
-                    <button class="btn-small" onclick='editEmployee(${JSON.stringify(emp)})'>Edit</button>
-                    <button class="btn-small delete" onclick='deleteEmployee(${emp.id})'>Delete</button>
+                    <button class="btn-small" data-id="${emp.id}" onclick="editEmployee(this)">Edit</button>
+                    <button class="btn-small delete" data-id="${emp.id}" onclick="removeEmployee(this)">Delete</button>
                 </td>
             </tr>
         `;
-    }
+    });
 
     document.querySelector("#table-display").innerHTML = innerHTML;
 }
 
-function editEmployee(emp) {
-    localStorage.setItem("editEmployee", JSON.stringify(emp));
-    window.location.href = "payroll_form.html";
+/* ------------------------------------
+   DELETE EMPLOYEE
+-------------------------------------*/
+function removeEmployee(node) {
+    let empId = node.getAttribute("data-id");
+
+    if (useServer) {
+        // DELETE from server
+        fetch(`${SERVER_URL}/${empId}`, {
+            method: "DELETE"
+        })
+        .then(() => getEmployeeFromServer());
+    } else {
+        // DELETE from Local Storage
+        employeePayrollList = employeePayrollList.filter(emp => emp.id != empId);
+        localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList));
+        createInnerHTML();
+    }
 }
 
-function deleteEmployee(id) {
-    employeeList = employeeList.filter(e => e.id !== id);
-    createInnerHTML();
+/* ------------------------------------
+   EDIT EMPLOYEE
+-------------------------------------*/
+function editEmployee(node) {
+    let empId = node.getAttribute("data-id");
+
+    let employeeData = employeePayrollList.find(emp => emp.id == empId);
+
+    localStorage.setItem("editEmployee", JSON.stringify(employeeData));
+
+    window.location.href = "payroll_form.html";
 }
