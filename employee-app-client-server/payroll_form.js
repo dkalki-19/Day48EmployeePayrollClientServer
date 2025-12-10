@@ -45,45 +45,55 @@ function setForm(emp) {
     document.getElementById("year").value = d.getFullYear();
 }
 
-document.getElementById("payrollForm").addEventListener("submit", e => {
+document.getElementById("payrollForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const name = document.getElementById("name").value;
-    if (!validateName(name)) {
-        alert("Invalid Name");
-        return;
-    }
-
-    let day = document.getElementById("day").value;
-    let month = document.getElementById("month").value;
-    let year = document.getElementById("year").value;
-    let startDate = new Date(year, month, day);
-
-    if (!validateStartDate(startDate)) {
-        alert("Invalid Start Date");
-        return;
-    }
-
-    let emp = {
-        name: name,
-        profilePic: document.querySelector("input[name='profile']:checked")?.value || "",
-        gender: document.querySelector("input[name='gender']:checked")?.value || "",
+    const emp = {
+        name: document.getElementById("name").value,
+        profilePic: document.querySelector("input[name='profile']:checked")?.value,
+        gender: document.querySelector("input[name='gender']:checked")?.value,
+        department: [...document.querySelectorAll("input[type='checkbox']:checked")].map(d => d.value),
         salary: document.getElementById("salary").value,
         notes: document.getElementById("notes").value,
-        department: [...document.querySelectorAll("input[type='checkbox']:checked")].map(e => e.value),
-        startDate: startDate
+        startDate: new Date(
+            document.getElementById("year").value,
+            document.getElementById("month").value,
+            document.getElementById("day").value
+        )
     };
 
-    if (isUpdate) {
-        emp.id = employeeToEdit.id;   // IMPORTANT: use id, not _id
-        localStorage.setItem("updateEmployee", JSON.stringify(emp));
-    } else {
-        localStorage.setItem("newEmployee", JSON.stringify(emp));
-    }
+    try {
 
-    // redirect to home
-    window.location.href = "home.html";
+        let url = "http://localhost:3000/employees";
+        let method = "POST";
+
+        if (isUpdate) {
+            // Use PUT instead of POST
+            url = `http://localhost:3000/employees/${employeeToEdit.id}`;
+            method = "PUT";
+        }
+
+        const res = await fetch(url, {
+            method: method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(emp)
+        });
+
+        if (!res.ok) throw "Server Error";
+
+        alert(isUpdate ? "Employee Updated Successfully!" : "Employee Added Successfully!");
+
+        // Clear edit data
+        localStorage.removeItem("editEmployee");
+
+        window.location.href = "home.html";
+
+    } catch (err) {
+        alert("Failed to save employee: " + err);
+    }
 });
+
+
 
 function updateDays() {
     let daySelect = document.getElementById("day");
@@ -113,3 +123,10 @@ document.getElementById("year").addEventListener("change", updateDays);
 
 // Initialize Day dropdown on load
 updateDays();
+
+// Salary Output
+    const salarySlider = document.getElementById("salary");
+    const salaryOutput = document.getElementById("salary-output");
+    salarySlider.addEventListener("input", () => {
+        salaryOutput.textContent = salarySlider.value;
+    });

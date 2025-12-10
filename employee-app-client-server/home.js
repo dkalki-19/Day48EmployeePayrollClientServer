@@ -3,13 +3,35 @@ const SERVER_URL = "http://localhost:3000/employees";
 
 let employeePayrollList = [];
 
+// window.addEventListener("DOMContentLoaded", () => {
+//     if (useServer) {
+//         getEmployeeFromServer();
+//     } else {
+//         loadFromLocalStorage();
+//     }
+// });
+
 window.addEventListener("DOMContentLoaded", () => {
-    if (useServer) {
-        getEmployeeFromServer();
-    } else {
-        loadFromLocalStorage();
-    }
+    loadData();
 });
+
+async function loadData() {
+    try {
+        const res = await fetch("http://localhost:3000/employees");
+
+        if (!res.ok) throw "Server Error";
+
+        employeePayrollList = await res.json();
+
+    } catch (err) {
+        alert("Unable to connect to server. Showing local storage data.");
+
+        employeePayrollList = JSON.parse(localStorage.getItem("EmployeePayrollList")) || [];
+    }
+
+    document.getElementById("emp-count").textContent = `(${employeePayrollList.length})`;
+    createInnerHTML();
+}
 
 /* ------------------------------------
    LOAD FROM LOCAL STORAGE
@@ -47,32 +69,25 @@ function createInnerHTML() {
     let innerHTML = "";
 
     employeePayrollList.forEach(emp => {
-        let date = new Date(emp.startDate);
-        let formattedDate = date.toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric"
-        });
-
-        let deptHTML = "";
-        emp.department.forEach(dept => {
-            deptHTML += `<div class='dept-chip'>${dept}</div>`;
-        });
+        let deptHTML = (emp.department || [])
+            .map(d => `<div class='dept-chip'>${d}</div>`)
+            .join("");
 
         innerHTML += `
-            <tr>
-                <td><img class="table-profile" src="./assets/${emp.profilePic}"></td>
-                <td>${emp.name}</td>
-                <td>${emp.gender}</td>
-                <td>${deptHTML}</td>
-                <td>${emp.salary}</td>
-                <td>${formattedDate}</td>
+        <tr>
+            <td><img src="./assets/${emp.profilePic}" class="table-profile"></td>
+            <td>${emp.name}</td>
+            <td>${emp.gender}</td>
+            <td>${deptHTML}</td>
+            <td>${emp.salary}</td>
+            <td>${new Date(emp.startDate).toLocaleDateString("en-GB")}</td>
+            <td>
                 <td>
-                    <button class="btn-small" data-id="${emp.id}" onclick="editEmployee(this)">Edit</button>
-                    <button class="btn-small delete" data-id="${emp.id}" onclick="removeEmployee(this)">Delete</button>
+                    <button data-id="${emp.id}" onclick="editEmployee(this)" class="btn-small">Edit</button>
+                    <button data-id="${emp.id}" onclick="removeEmployee(this)" class="btn-small delete">Delete</button>
                 </td>
-            </tr>
-        `;
+            </td>
+        </tr>`;
     });
 
     document.querySelector("#table-display").innerHTML = innerHTML;
@@ -85,18 +100,17 @@ function removeEmployee(node) {
     let empId = node.getAttribute("data-id");
 
     if (useServer) {
-        // DELETE from server
         fetch(`${SERVER_URL}/${empId}`, {
             method: "DELETE"
         })
         .then(() => getEmployeeFromServer());
     } else {
-        // DELETE from Local Storage
         employeePayrollList = employeePayrollList.filter(emp => emp.id != empId);
         localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList));
         createInnerHTML();
     }
 }
+
 
 /* ------------------------------------
    EDIT EMPLOYEE
@@ -110,3 +124,6 @@ function editEmployee(node) {
 
     window.location.href = "payroll_form.html";
 }
+
+
+

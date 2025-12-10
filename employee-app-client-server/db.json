@@ -1,24 +1,29 @@
 {
   "employees": [
     {
-      "id": "2",
-      "name": "Clark",
-      "salary": "60000"
+      "id": 1,
+      "name": "Kiran",
+      "gender": "Male",
+      "salary": 30000,
+      "department": [
+        "HR"
+      ],
+      "profilePic": "pic1.jpg",
+      "startDate": "2024-11-10",
+      "notes": ""
     },
     {
-      "id": "65f3",
-      "name": "Test User",
-      "salary": "50000"
-    },
-    {
-      "id": "cba0",
-      "name": "Test User",
-      "salary": "50000"
-    },
-    {
-      "id": "44aa",
-      "name": "Test User",
-      "salary": "50000"
+      "name": "Vasanth",
+      "profilePic": "pic3.jpg",
+      "gender": "Male",
+      "department": [
+        "Finance",
+        "Engineer"
+      ],
+      "salary": "55000",
+      "notes": "",
+      "startDate": "2025-11-30T18:30:00.000Z",
+      "id": "6dfc"
     }
   ]
 }
