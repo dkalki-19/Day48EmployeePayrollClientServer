@@ -84,7 +84,7 @@ function createInnerHTML() {
             <td>
                 <td>
                     <button data-id="${emp.id}" onclick="editEmployee(this)" class="btn-small">Edit</button>
-                    <button data-id="${emp.id}" onclick="removeEmployee(this)" class="btn-small delete">Delete</button>
+                    <button onclick="removeEmployee(${emp.id})" class="btn-small delete">Delete</button>
                 </td>
             </td>
         </tr>`;
@@ -96,20 +96,26 @@ function createInnerHTML() {
 /* ------------------------------------
    DELETE EMPLOYEE
 -------------------------------------*/
-function removeEmployee(node) {
-    let empId = node.getAttribute("data-id");
+function removeEmployee(empId) {
 
     if (useServer) {
         fetch(`${SERVER_URL}/${empId}`, {
             method: "DELETE"
         })
-        .then(() => getEmployeeFromServer());
-    } else {
+        .then(res => {
+            if (!res.ok) throw "Delete failed";
+            return getEmployeeFromServer();
+        })
+        .catch(err => alert("Server delete failed: " + err));
+    } 
+    
+    else {
         employeePayrollList = employeePayrollList.filter(emp => emp.id != empId);
         localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList));
         createInnerHTML();
     }
 }
+
 
 
 /* ------------------------------------
