@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Employee Payroll Form</title>
@@ -85,6 +85,103 @@
             <button type="reset" id="resetBtn" class="btn">Reset</button>
             <a href="home.html"><button type="button" id="cancelBtn" class="btn">Cancel</button></a>
             <button type="submit" id="submitBtn" class="btn">Submit</button>
+        </div>
+
+    </form>
+</div>
+
+<script src="payroll_form.js"></script>
+
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Payroll Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="main-header">Employee Payroll</header>
+
+<div class="form-container">
+    <header class="form-header">Employee Payroll Form</header>
+
+    <form id="payrollForm">
+
+        <label>Name:</label>
+        <input type="text" id="name" required>
+
+        <div class="form-row">
+            <label>Profile Image:</label>
+            <div class="profile-pics">
+                <label><input type="radio" name="profile" value="pic1.jpg"><img src="./assets/pic1.jpg"></label>
+                <label><input style="margin-left: 50px;" type="radio" name="profile" value="pic2.jpg"><img src="./assets/pic2.jpg"></label>
+                <label><input style="margin-left: 50px;" type="radio" name="profile" value="pic3.jpg"><img src="./assets/pic3.jpg"></label>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label>Gender:</label>
+            <div class="gender-box">
+                <label><input type="radio" name="gender" value="Male">Male</label>
+                <label><input style="margin-left: 30px;" type="radio" name="gender" value="Female">Female</label>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label>Department:</label>
+            <div class="dept-box">
+                <label><input type="checkbox" value="HR">HR</label>
+                <label><input style="margin-left: 50px;"  type="checkbox" value="Sales">Sales</label>
+                <label><input style="margin-left: 50px;"  type="checkbox" value="Finance">Finance</label>
+                <label><input style="margin-left: 50px;"  type="checkbox" value="Engineer">Engineer</label>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label>Salary: <span id="salary-output">40000</span></label>
+            <input type="range" min="10000" max="100000" value="40000" id="salary">
+        </div>
+
+        <div class="form-row">
+            <label>Start Date:</label>
+            <div style="margin-top: 10px;" class="date-row">
+                <select id="day"></select>
+                <select style="margin-left: 30px;"  id="month">
+                    <option value="0">Jan</option>
+                    <option value="1">Feb</option>
+                    <option value="2">Mar</option>
+                    <option value="3">Apr</option>
+                    <option value="4">May</option>
+                    <option value="5">Jun</option>
+                    <option value="6">Jul</option>
+                    <option value="7">Aug</option>
+                    <option value="8">Sep</option>
+                    <option value="9">Oct</option>
+                    <option value="10">Nov</option>
+                    <option value="11">Dec</option>
+                </select>
+
+                <select style="margin-left: 30px;"  id="year">
+                    <option>2025</option>
+                    <option>2024</option>
+                    <option>2023</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label>Notes:</label>
+            <textarea id="notes" rows="3"></textarea>
+        </div>
+
+        <div class="form-buttons">
+            <button type="reset" class="btn">Reset</button>
+            <button type="button" id="cancelBtn" class="btn">Cancel</button>
+            <button type="submit" class="btn">Submit</button>
         </div>
 
     </form>
