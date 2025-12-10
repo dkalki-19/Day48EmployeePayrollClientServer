@@ -8,8 +8,14 @@ window.addEventListener("DOMContentLoaded", () => {
     if (employeeToEdit) {
         isUpdate = true;
         setForm(employeeToEdit);
+    } else {
+        // Fresh form when adding new employee
+        document.getElementById("payrollForm").reset();
+        document.getElementById("salary-output").textContent =
+            document.getElementById("salary").value;
     }
 });
+
 
 // Utility: Validate Name
 function validateName(name) {
